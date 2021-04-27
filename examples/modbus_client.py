@@ -18,6 +18,7 @@ from pymodbus.framer.socket_framer import ModbusSocketFramer
 from pymodbus.factory import ClientDecoder
 from pymodbus.transaction import DictTransactionManager
 logger = logging.getLogger("client")
+logger.setLevel('DEBUG')
 
 class ModbusUdpClientProtocol(ModbusClientMixin):
     def __init__(self, client):

@@ -8,7 +8,8 @@ from typing import Dict, Optional
 
 from pymodbus.constants import Defaults
 # import pymodbus.constants
-from pymodbus.datastore import ModbusServerContext
+from pymodbus.datastore import ModbusSlaveContext, ModbusServerContext
+from pymodbus.datastore import ModbusSequentialDataBlock
 from pymodbus.device import ModbusControlBlock, ModbusDeviceIdentification
 from pymodbus.exceptions import NoSuchSlaveException
 from pymodbus.factory import ServerDecoder
@@ -24,15 +25,25 @@ from aioquic.quic.events import ProtocolNegotiated, QuicEvent, StreamDataReceive
 from aioquic.tls import SessionTicket
 
 _logger = logging.getLogger(__name__)
+_logger.setLevel('DEBUG')
 try:
     import uvloop
 except ImportError:
     uvloop = None
 
+store = ModbusSlaveContext(
+        di=ModbusSequentialDataBlock(0, [17]*100),
+        co=ModbusSequentialDataBlock(0, [17]*100),
+        hr=ModbusSequentialDataBlock(0, [17]*100),
+        ir=ModbusSequentialDataBlock(0, [17]*100))
+
+context = ModbusServerContext(slaves=store, single=True)
+
+
 class ModbusProtocol(QuicConnectionProtocol):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.context = ModbusServerContext()
+        self.context = context
         self.broadcast_enable = False
         self.decoder = ServerDecoder()
         self.framer = ModbusSocketFramer(self.decoder)
