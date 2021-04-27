@@ -56,8 +56,8 @@ class ModbusUdpClientProtocol(ModbusClientMixin):
 
     def dataReceived(self, data):
         logger.debug(b"recv: " + data)
-        unit = self.protocol.framer.decode_data(data=data).get("unit", 0)
-        self.protocol.framer.processIncomingPacket(data, self._handleResponse, unit=unit)
+        unit = self.framer.decode_data(data=data).get("unit", 0)
+        self.framer.processIncomingPacket(data, self._handleResponse, unit=unit)
 
         waiter = self._ack_waiter
         self._ack_waiter = None
@@ -83,7 +83,9 @@ class ModbusClient(QuicConnectionProtocol):
         if self.protocol._ack_waiter is not None:
             if isinstance(event, StreamDataReceived):
                 data = event.data
-                logger.info(data)
+                logger.info("receive data" + str(data))
+                self.protocol.dataReceived(data)
+
 
     def send(self, data):
         stream_id = self._quic.get_next_available_stream_id()
