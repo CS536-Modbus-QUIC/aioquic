@@ -6,11 +6,8 @@ from binascii import b2a_hex
 
 from typing import Dict, Optional
 
-from pymodbus.constants import Defaults
-# import pymodbus.constants
 from pymodbus.datastore import ModbusSlaveContext, ModbusServerContext
 from pymodbus.datastore import ModbusSequentialDataBlock
-from pymodbus.device import ModbusControlBlock, ModbusDeviceIdentification
 from pymodbus.exceptions import NoSuchSlaveException
 from pymodbus.factory import ServerDecoder
 from pymodbus.framer.socket_framer import ModbusSocketFramer
@@ -20,12 +17,12 @@ from quic_logger import QuicDirectoryLogger
 
 from aioquic.asyncio import QuicConnectionProtocol, serve
 from aioquic.quic.configuration import QuicConfiguration
-from aioquic.quic.connection import QuicConnection
-from aioquic.quic.events import ProtocolNegotiated, QuicEvent, StreamDataReceived
+from aioquic.quic.events import QuicEvent, StreamDataReceived
 from aioquic.tls import SessionTicket
 
 _logger = logging.getLogger(__name__)
 _logger.setLevel('DEBUG')
+
 try:
     import uvloop
 except ImportError:
@@ -44,10 +41,10 @@ class ModbusProtocol(QuicConnectionProtocol):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.context = context
-        self.broadcast_enable = False
+        self.broadcast_enable = False # TODO: get value from command
         self.decoder = ServerDecoder()
         self.framer = ModbusSocketFramer(self.decoder)
-        self.response_manipulator = None
+        self.response_manipulator = None # TODO: get value from command
 
     def quic_event_received(self, event: QuicEvent):
         if isinstance(event, StreamDataReceived):
@@ -163,7 +160,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--port",
         type=int,
-        default=4784,
+        default=5020,
         help="listen on the specified port (defaults to 4784)",
     )
     parser.add_argument(
@@ -179,17 +176,13 @@ if __name__ == "__main__":
         required=True,
         help="load the TLS certificate from the specified file",
     )
-    parser.add_argument(
-        "--resolver",
-        type=str,
-        default="8.8.8.8",
-        help="Upstream Classic DNS resolver to use",
-    )
+
     parser.add_argument(
         "--retry",
         action="store_true",
         help="send a retry for new connections",
     )
+
     parser.add_argument(
         "-q",
         "--quic-log",
@@ -199,7 +192,6 @@ if __name__ == "__main__":
     parser.add_argument(
         "-v", "--verbose", action="store_true", help="increase logging verbosity"
     )
-
     args = parser.parse_args()
     logging.basicConfig(
         format="%(asctime)s %(levelname)s %(name)s %(message)s",
