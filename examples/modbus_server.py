@@ -37,7 +37,7 @@ store = ModbusSlaveContext(
 context = ModbusServerContext(slaves=store, single=True)
 
 
-class ModbusProtocol(QuicConnectionProtocol):
+class ModbusOverQuicServerProtocol(QuicConnectionProtocol):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.context = context
@@ -222,7 +222,7 @@ if __name__ == "__main__":
             args.host,
             args.port,
             configuration=configuration,
-            create_protocol=ModbusProtocol,
+            create_protocol=ModbusOverQuicServerProtocol,
             session_ticket_fetcher=ticket_store.pop,
             session_ticket_handler=ticket_store.add,
             retry=args.retry,

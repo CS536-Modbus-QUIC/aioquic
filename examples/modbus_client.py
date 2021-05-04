@@ -20,7 +20,7 @@ from pymodbus.transaction import DictTransactionManager
 logger = logging.getLogger("client")
 logger.setLevel('DEBUG')
 
-class ModbusUdpClientProtocol(ModbusClientMixin):
+class ModbusOverQuicClientProtocol(ModbusClientMixin):
     def __init__(self, client, timeout=2):
         self.client = client
         self.decoder = ClientDecoder()
@@ -77,7 +77,7 @@ class ModbusUdpClientProtocol(ModbusClientMixin):
 class ModbusClient(QuicConnectionProtocol):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.protocol = ModbusUdpClientProtocol(client=self)
+        self.protocol = ModbusOverQuicClientProtocol(client=self)
 
     def quic_event_received(self, event: QuicEvent) -> None:
         if self.protocol._ack_waiter is not None:
