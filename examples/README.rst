@@ -63,13 +63,13 @@ You can then run the client with a specific query:
 
 Modbus over QUIC
 -------------
-You can run the example to perform Mobus over TCP.
+You can run the example to run Modbus server.
 .. code-block:: console
 
-    $ python3 examples/modbus_server.py --certificate tests/ssl_cert.pem --private-key tests/ssl_key.pem --host 127.0.0.1 --port 502
+    $ python examples/modbus_server.py --certificate tests/ssl_cert.pem --private-key tests/ssl_key.pem --host 127.0.0.1 --port 502
 
-You can then run the client with a specific query:
+You can then run the client with a specific Modbus request:
 
 .. code-block:: console
 
-    $ python3 examples/modbus_client.py --ca-certs tests/pycacert.pem --port 502 --host 127.0.0.1
+    $ python examples/modbus_client.py --ca-certs tests/pycacert.pem --port 502 --host 127.0.0.1
