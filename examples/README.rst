@@ -65,6 +65,7 @@ Modbus over QUIC
 -------------
 
 You can run the example to run Modbus server.
+
 .. code-block:: console
 
     $ python examples/modbus_server.py --certificate tests/ssl_cert.pem --private-key tests/ssl_key.pem --host 127.0.0.1 --port 502
