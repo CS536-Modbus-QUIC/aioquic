@@ -60,3 +60,16 @@ You can then run the client with a specific query:
     $ python examples/doq_client.py --ca-certs tests/pycacert.pem --dns_type "A" --query "quic.aiortc.org" --port 4784
 
 .. _Google Public DNS: https://developers.google.com/speed/public-dns
+
+Modbus over QUIC
+-------------
+You can run the example to perform Mobus over TCP.
+.. code-block:: console
+
+    $ python3 examples/modbus_server.py --certificate tests/ssl_cert.pem --private-key tests/ssl_key.pem --host 127.0.0.1 --port 502
+
+You can then run the client with a specific query:
+
+.. code-block:: console
+
+    $ python3 examples/modbus_client.py --ca-certs tests/pycacert.pem --port 502 --host 127.0.0.1
