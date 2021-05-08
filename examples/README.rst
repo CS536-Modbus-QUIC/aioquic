@@ -63,15 +63,17 @@ You can then run the client with a specific query:
 
 Modbus over QUIC
 -------------
+Before running Modbus over QUIC, make sure you have installed pymodbus correctly(See the readme.md for Pymodbus_).
 
-You can run the example to run Modbus server.
-
-.. code-block:: console
-
-    $ python examples/modbus_server.py --certificate tests/ssl_cert.pem --private-key tests/ssl_key.pem --host 127.0.0.1 --port 502
-
-You can then run the client with a specific Modbus request:
+.. _Pymodbus: https://github.com/CS536-Modbus-QUIC/pymodbus
+To run Server:
 
 .. code-block:: console
 
-    $ python examples/modbus_client.py --ca-certs tests/pycacert.pem --port 502 --host 127.0.0.1
+    $ python3 examples/modbus_server.py --certificate tests/ssl_cert.pem --private-key tests/ssl_key.pem --host 127.0.0.1 --port 502
+
+To run Client:
+
+.. code-block:: console
+
+    $ python3 examples/modbus_client.py --ca-certs tests/pycacert.pem --port 502 --host 127.0.0.1
